@@ -24,6 +24,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void OnConstruction(const FTransform& Transform);
 
 public:	
 	// Called every frame
@@ -72,11 +73,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AProjectile> ProjectileClass;
 
+	UPROPERTY()
 	UUserWidget* ZoomWidget;
 
 protected:
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle DataTableRowHandle;
+
+	FProjectileTableRow* ProjectileTableRow;
+
+	UPROPERTY()
+	FTimerHandle FireTimerHandle;
 
 
 

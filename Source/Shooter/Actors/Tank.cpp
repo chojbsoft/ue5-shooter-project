@@ -40,6 +40,13 @@ void ATank::BeginPlay()
 	ZoomWidget = CreateWidget(GetWorld(), ZoomWidgetClass);
 }
 
+void ATank::OnConstruction(const FTransform& Transform)
+{
+	if (!DataTableRowHandle.DataTable) { return; }
+	if (DataTableRowHandle.IsNull()) { return; }
+	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileTableRow>(TEXT("TankProjectile"));
+}
+
 // Called every frame
 void ATank::Tick(float DeltaTime)
 {
@@ -72,13 +79,15 @@ void ATank::Zoom(UINT8 bZoom)
 
 void ATank::Fire()
 {
+	bool bTimer = GetWorld()->GetTimerManager().IsTimerActive(FireTimerHandle);
+	if (bTimer) { return; }
+	GetWorld()->GetTimerManager().SetTimer(FireTimerHandle, ProjectileTableRow->FireDelay, false);
+
 	FTransform Transform = FTransform(Socket->GetComponentRotation(), Socket->GetComponentLocation(), FVector::One());
 	AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, Transform, this, this
 		, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-	Projectile->SetData(DataTableRowHandle);
-	//Projectile->GetProjectileMovementComponent()->InitialSpeed = 2000.f;
-	//Projectile->GetProjectileMovementComponent()->MaxSpeed = 2000.f;
+	Projectile->SetData(ProjectileTableRow);
 	Projectile->FinishSpawning(Transform, true);
 }
 

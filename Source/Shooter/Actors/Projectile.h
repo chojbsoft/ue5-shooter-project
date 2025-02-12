@@ -26,6 +26,12 @@ struct FProjectileTableRow : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	float ProjectileSpeed = 2000.f;
 
+	UPROPERTY(EditAnywhere)
+	float FireDelay = 0.2f;
+
+	UPROPERTY(EditAnywhere)
+	float InitialLifeSpan = 5.f;
+
 };
 
 
@@ -49,7 +55,7 @@ public:
 
 public:
 	UProjectileMovementComponent* GetProjectileMovementComponent() const { return ProjectileMovementComponent; }
-	void SetData(const FDataTableRowHandle& DataTableRowHandle);
+	void SetData(const FProjectileTableRow* Row);
 
 protected:
 	UFUNCTION()

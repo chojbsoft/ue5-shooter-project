@@ -34,13 +34,10 @@ void AProjectile::Tick(float DeltaTime)
 
 }
 
-void AProjectile::SetData(const FDataTableRowHandle& DataTableRowHandle)
+void AProjectile::SetData(const FProjectileTableRow* Row)
 {
-	if (!DataTableRowHandle.DataTable) { return; }
-	if (DataTableRowHandle.IsNull()) { return; }
-
-	FProjectileTableRow* Row = DataTableRowHandle.GetRow<FProjectileTableRow>(TEXT("TankProjectile"));
 	ProjectileMovementComponent->InitialSpeed = Row->ProjectileSpeed;
+	InitialLifeSpan = Row->InitialLifeSpan;
 }
 
 void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
