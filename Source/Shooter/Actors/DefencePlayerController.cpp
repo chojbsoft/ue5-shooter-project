@@ -59,15 +59,27 @@ void ADefencePlayerController::OnLook(const FInputActionValue& InputActionValue)
 
 void ADefencePlayerController::OnZoomIn(const FInputActionValue& InputActionValue)
 {
-	Cast<ATank>(GetPawn())->Zoom(true);
+	ATank* Tank = Cast<ATank>(GetPawn());
+	if (Tank)
+	{
+		Tank->Zoom(true);
+	}
 }
 
 void ADefencePlayerController::OnZoomOut(const FInputActionValue& InputActionValue)
 {
-	Cast<ATank>(GetPawn())->Zoom(false);
+	ATank* Tank = Cast<ATank>(GetPawn());
+	if (Tank)
+	{
+		Tank->Zoom(false);
+	}
 }
 
 void ADefencePlayerController::OnFire(const FInputActionValue& InputActionValue)
 {
-	Cast<ATank>(GetPawn())->Fire();
+	ATank* Tank = Cast<ATank>(GetPawn());
+	if (Tank)
+	{
+		Tank->Fire();
+	}
 }
