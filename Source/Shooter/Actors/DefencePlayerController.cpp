@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Actors/DefencePlayerController.h"
+#include "Interface/TankInterface.h"
 
 ADefencePlayerController::ADefencePlayerController()
 {
@@ -59,7 +59,7 @@ void ADefencePlayerController::OnLook(const FInputActionValue& InputActionValue)
 
 void ADefencePlayerController::OnZoomIn(const FInputActionValue& InputActionValue)
 {
-	ATank* Tank = Cast<ATank>(GetPawn());
+	ITankInterface* Tank = Cast<ITankInterface>(GetPawn());
 	if (Tank)
 	{
 		Tank->Zoom(true);
@@ -68,7 +68,7 @@ void ADefencePlayerController::OnZoomIn(const FInputActionValue& InputActionValu
 
 void ADefencePlayerController::OnZoomOut(const FInputActionValue& InputActionValue)
 {
-	ATank* Tank = Cast<ATank>(GetPawn());
+	ITankInterface* Tank = Cast<ITankInterface>(GetPawn());
 	if (Tank)
 	{
 		Tank->Zoom(false);
@@ -77,7 +77,7 @@ void ADefencePlayerController::OnZoomOut(const FInputActionValue& InputActionVal
 
 void ADefencePlayerController::OnFire(const FInputActionValue& InputActionValue)
 {
-	ATank* Tank = Cast<ATank>(GetPawn());
+	ITankInterface* Tank = Cast<ITankInterface>(GetPawn());
 	if (Tank)
 	{
 		Tank->Fire();

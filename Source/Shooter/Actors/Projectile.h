@@ -32,6 +32,9 @@ struct FProjectileTableRow : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	float InitialLifeSpan = 5.f;
 
+	UPROPERTY(EditAnywhere)
+	TArray<UMaterial*> Materials;
+
 };
 
 
