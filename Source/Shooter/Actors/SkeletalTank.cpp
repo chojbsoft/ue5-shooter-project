@@ -2,6 +2,7 @@
 
 
 #include "Actors/SkeletalTank.h"
+#include "Actors/ProjectileEffect.h"
 
 // Sets default values
 ASkeletalTank::ASkeletalTank()
@@ -89,6 +90,11 @@ void ASkeletalTank::Zoom(UINT8 bZoom)
 
 void ASkeletalTank::Fire()
 {
+	if (!ProjectileTableRow)
+	{
+		return;
+	}
+
 	bool bTimer = GetWorld()->GetTimerManager().IsTimerActive(FireTimerHandle);
 	if (bTimer) { return; }
 	GetWorld()->GetTimerManager().SetTimer(FireTimerHandle, ProjectileTableRow->FireDelay, false);
@@ -101,13 +107,14 @@ void ASkeletalTank::Fire()
 	Projectile->SetData(ProjectileTableRow);
 	Projectile->FinishSpawning(Transform, true);
 
-	if (EffectClass)
+	if (!EffectClass || ProjectileTableRow->FireEffect.IsNull())
 	{
-		FActorSpawnParameters ActorSpawnParameters;
-		ActorSpawnParameters.Owner = this;
-		ActorSpawnParameters.Instigator = this;
-		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		GetWorld()->SpawnActor<AActor>(EffectClass, ZoomCamera->GetComponentTransform(), ActorSpawnParameters);
+		return;
 	}
+
+	AProjectileEffect* Effect =  GetWorld()->SpawnActorDeferred<AProjectileEffect>(EffectClass
+		, ZoomCamera->GetComponentTransform(), this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	Effect->SetEffectData(ProjectileTableRow->FireEffect.GetRow<FEffectDataTableRow>(TEXT("ProjectileEffect")));
+	Effect->FinishSpawning(ZoomCamera->GetComponentTransform());
 }
 
