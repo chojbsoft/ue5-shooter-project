@@ -73,13 +73,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle DataTableRowHandle;
 
-	FProjectileTableRow* ProjectileTableRow;
+	FProjectileDataTableRow* ProjectileTableRow;
 
 	UPROPERTY()
 	FTimerHandle FireTimerHandle;
-
-protected:
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> EffectClass;
 
 };

@@ -80,7 +80,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle DataTableRowHandle;
 
-	FProjectileTableRow* ProjectileTableRow;
+	FProjectileDataTableRow* ProjectileTableRow;
 
 	UPROPERTY()
 	FTimerHandle FireTimerHandle;

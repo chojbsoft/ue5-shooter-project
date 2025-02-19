@@ -10,7 +10,7 @@
 #include "Projectile.generated.h"
 
 USTRUCT()
-struct FProjectileTableRow : public FTableRowBase
+struct FProjectileDataTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -37,6 +37,9 @@ struct FProjectileTableRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle FireEffect;
+
+	UPROPERTY(EditAnywhere)
+	FDataTableRowHandle HitEffect;
 };
 
 
@@ -53,7 +56,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void EndPlay() override;
 
 public:	
 	// Called every frame
@@ -61,7 +63,7 @@ public:
 
 public:
 	UProjectileMovementComponent* GetProjectileMovementComponent() const { return ProjectileMovementComponent; }
-	void SetData(const FProjectileTableRow* Row);
+	void SetData(const FProjectileDataTableRow* Row);
 
 protected:
 	UFUNCTION()
@@ -78,5 +80,8 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UPROPERTY(EditAnywhere)
+	FDataTableRowHandle DataTableRowHandle;
 
 };

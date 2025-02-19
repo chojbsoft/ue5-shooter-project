@@ -2,7 +2,7 @@
 
 
 #include "Actors/SkeletalTank.h"
-#include "Actors/ProjectileEffect.h"
+#include "Actors/Effect.h"
 
 // Sets default values
 ASkeletalTank::ASkeletalTank()
@@ -54,7 +54,7 @@ void ASkeletalTank::OnConstruction(const FTransform& Transform)
 {
 	if (!DataTableRowHandle.DataTable) { return; }
 	if (DataTableRowHandle.IsNull()) { return; }
-	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileTableRow>(TEXT("TankProjectile"));
+	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileDataTableRow>(TEXT("TankProjectile"));
 }
 
 // Called every frame
@@ -107,14 +107,14 @@ void ASkeletalTank::Fire()
 	Projectile->SetData(ProjectileTableRow);
 	Projectile->FinishSpawning(Transform, true);
 
-	if (!EffectClass || ProjectileTableRow->FireEffect.IsNull())
+	if (!ProjectileTableRow->FireEffect.DataTable || ProjectileTableRow->FireEffect.RowName.IsNone())
 	{
 		return;
 	}
 
-	AProjectileEffect* Effect =  GetWorld()->SpawnActorDeferred<AProjectileEffect>(EffectClass
+	AEffect* Effect =  GetWorld()->SpawnActorDeferred<AEffect>(AEffect::StaticClass()
 		, ZoomCamera->GetComponentTransform(), this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-	Effect->SetEffectData(ProjectileTableRow->FireEffect.GetRow<FEffectDataTableRow>(TEXT("ProjectileEffect")));
+	Effect->SetData(ProjectileTableRow->FireEffect.GetRow<FEffectDataTableRow>(TEXT("ProjectileEffect")));
 	Effect->FinishSpawning(ZoomCamera->GetComponentTransform());
 }
 

@@ -2,6 +2,7 @@
 
 
 #include "Projectile.h"
+#include "Actors/Effect.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -33,7 +34,7 @@ void AProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectile::SetData(const FProjectileTableRow* Row)
+void AProjectile::SetData(const FProjectileDataTableRow* Row)
 {
 	ProjectileMovementComponent->InitialSpeed = Row->ProjectileSpeed;
 	InitialLifeSpan = Row->InitialLifeSpan;
@@ -57,6 +58,22 @@ void AProjectile::SetData(const FProjectileTableRow* Row)
 
 void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (!DataTableRowHandle.DataTable || DataTableRowHandle.RowName.IsNone())
+	{
+		return;
+	}
 
+	const FTransform& Transform = SelfActor->GetActorTransform();
+	AEffect* Effect = GetWorld()->SpawnActorDeferred<AEffect>(AEffect::StaticClass(), Transform
+		, this, this->GetInstigator(), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	FEffectDataTableRow* Row = DataTableRowHandle.GetRow<FEffectDataTableRow>(TEXT("HitEffect"));
+	if (!Row)
+	{
+		return;
+	}
+	Effect->SetData(Row);
+
+	Effect->FinishSpawning(Transform);
 }
 

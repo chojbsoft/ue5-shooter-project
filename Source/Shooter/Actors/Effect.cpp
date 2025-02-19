@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Actors/ProjectileEffect.h"
+#include "Actors/Effect.h"
 
 // Sets default values
-AProjectileEffect::AProjectileEffect()
+AEffect::AEffect()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -17,7 +17,7 @@ AProjectileEffect::AProjectileEffect()
 
 }
 
-void AProjectileEffect::SetEffectData(const FEffectDataTableRow* EffectDataTableRow)
+void AEffect::SetData(const FEffectDataTableRow* EffectDataTableRow)
 {
 	const int32 RandomIndex = FMath::RandRange(0, EffectDataTableRow->Sounds.Num() - 1);
 	AudioComponent->SetSound(EffectDataTableRow->Sounds[RandomIndex]);
@@ -25,14 +25,14 @@ void AProjectileEffect::SetEffectData(const FEffectDataTableRow* EffectDataTable
 }
 
 // Called when the game starts or when spawned
-void AProjectileEffect::BeginPlay()
+void AEffect::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AProjectileEffect::Tick(float DeltaTime)
+void AEffect::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

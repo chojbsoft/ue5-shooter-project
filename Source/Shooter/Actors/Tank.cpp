@@ -44,7 +44,7 @@ void ATank::OnConstruction(const FTransform& Transform)
 {
 	if (!DataTableRowHandle.DataTable) { return; }
 	if (DataTableRowHandle.IsNull()) { return; }
-	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileTableRow>(TEXT("TankProjectile"));
+	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileDataTableRow>(TEXT("TankProjectile"));
 }
 
 // Called every frame

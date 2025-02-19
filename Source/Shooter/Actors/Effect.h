@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ProjectileEffect.generated.h"
+#include "Effect.generated.h"
 
 USTRUCT()
 struct FEffectDataTableRow : public FTableRowBase
@@ -22,14 +22,14 @@ struct FEffectDataTableRow : public FTableRowBase
 };
 
 UCLASS()
-class SHOOTER_API AProjectileEffect : public AActor
+class SHOOTER_API AEffect : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AProjectileEffect();
-	void SetEffectData(const FEffectDataTableRow* EffectDataTableRow);
+	AEffect();
+	void SetData(const FEffectDataTableRow* EffectDataTableRow);
 
 protected:
 	// Called when the game starts or when spawned
