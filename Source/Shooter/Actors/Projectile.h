@@ -40,6 +40,9 @@ struct FProjectileDataTableRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle HitEffect;
+
+	UPROPERTY(EditAnywhere)
+	float Damage;
 };
 
 
@@ -63,7 +66,7 @@ public:
 
 public:
 	UProjectileMovementComponent* GetProjectileMovementComponent() const { return ProjectileMovementComponent; }
-	void SetData(const FProjectileDataTableRow* Row);
+	void SetData(FProjectileDataTableRow* Row);
 
 protected:
 	UFUNCTION()
@@ -81,7 +84,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
+	FProjectileDataTableRow* ProjectileDataTableRow;
+
 	UPROPERTY(EditAnywhere)
-	FDataTableRowHandle DataTableRowHandle;
+	FDataTableRowHandle EffectDataTableRowHandle;
 
 };

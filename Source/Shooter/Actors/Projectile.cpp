@@ -3,6 +3,8 @@
 
 #include "Projectile.h"
 #include "Actors/Effect.h"
+#include "Actors/Enemy.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -34,8 +36,9 @@ void AProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectile::SetData(const FProjectileDataTableRow* Row)
+void AProjectile::SetData(FProjectileDataTableRow* Row)
 {
+	ProjectileDataTableRow = Row;
 	ProjectileMovementComponent->InitialSpeed = Row->ProjectileSpeed;
 	InitialLifeSpan = Row->InitialLifeSpan;
 
@@ -58,22 +61,34 @@ void AProjectile::SetData(const FProjectileDataTableRow* Row)
 
 void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (!DataTableRowHandle.DataTable || DataTableRowHandle.RowName.IsNone())
+	AttachToActor(OtherActor, FAttachmentTransformRules::KeepRelativeTransform);
+
+	if (!EffectDataTableRowHandle.DataTable || EffectDataTableRowHandle.RowName.IsNone())
 	{
 		return;
 	}
 
+	// Spawn a deferred effect actor using SelfActor's transform
 	const FTransform& Transform = SelfActor->GetActorTransform();
 	AEffect* Effect = GetWorld()->SpawnActorDeferred<AEffect>(AEffect::StaticClass(), Transform
 		, this, this->GetInstigator(), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-	FEffectDataTableRow* Row = DataTableRowHandle.GetRow<FEffectDataTableRow>(TEXT("HitEffect"));
+	FEffectDataTableRow* Row = EffectDataTableRowHandle.GetRow<FEffectDataTableRow>(TEXT("HitEffect"));
 	if (!Row)
 	{
 		return;
 	}
 	Effect->SetData(Row);
-
 	Effect->FinishSpawning(Transform);
+
+	// Attempt to cast OtherActor to an Enemy pointer.
+	AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+	if (Enemy)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
+		FString String = FString::Printf(TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *String);
+
+		UGameplayStatics::ApplyDamage(Enemy, (float)ProjectileDataTableRow->Damage, GetInstigatorController(), GetInstigator(), nullptr);
+	}
 }
 
