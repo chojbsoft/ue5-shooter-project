@@ -55,6 +55,13 @@ void ASkeletalTank::OnConstruction(const FTransform& Transform)
 	if (!DataTableRowHandle.DataTable) { return; }
 	if (DataTableRowHandle.IsNull()) { return; }
 	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileDataTableRow>(TEXT("TankProjectile"));
+
+	UMaterialInterface* Material = SkeletalMeshComponent->GetMaterial(1);
+	if (Material)
+	{
+		MID = UMaterialInstanceDynamic::Create(Material, SkeletalMeshComponent);
+		SkeletalMeshComponent->SetMaterial(1, MID);
+	}
 }
 
 // Called every frame
@@ -112,7 +119,7 @@ void ASkeletalTank::Fire()
 		return;
 	}
 
-	AEffect* Effect =  GetWorld()->SpawnActorDeferred<AEffect>(AEffect::StaticClass()
+	AEffect* Effect = GetWorld()->SpawnActorDeferred<AEffect>(AEffect::StaticClass()
 		, ZoomCamera->GetComponentTransform(), this, this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	Effect->SetData(ProjectileTableRow->FireEffect.GetRow<FEffectDataTableRow>(TEXT("ProjectileEffect")));
 	Effect->FinishSpawning(ZoomCamera->GetComponentTransform());

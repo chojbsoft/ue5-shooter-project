@@ -40,6 +40,9 @@ public:
 	virtual void Zoom(UINT8 bZoom) override;
 	virtual void Fire() override;
 
+public:
+	void MoveTrack(float Value);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UBoxComponent* BoxComponent;
@@ -77,5 +80,12 @@ protected:
 
 	UPROPERTY()
 	FTimerHandle FireTimerHandle;
+
+protected:
+	// MID
+	UPROPERTY()
+	UMaterialInstanceDynamic* MID;
+	
+
 
 };

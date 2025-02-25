@@ -20,10 +20,18 @@ protected:
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	FRotator TurretRotation;
+	FRotator TurretRotation = FRotator::ZeroRotator;
 
 	UPROPERTY(BlueprintReadOnly)
-	float Speed;
+	float TurretRotationSpeed = 1.0f;
 
-	APawn* Pawn;
+	UPROPERTY()
+	APawn* Pawn = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	FRotator WheelRotation = FRotator::ZeroRotator;
+
+	UPROPERTY(BlueprintReadOnly)
+	double Track = 0.0;
+	
 };
