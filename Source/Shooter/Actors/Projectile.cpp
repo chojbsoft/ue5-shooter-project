@@ -61,7 +61,7 @@ void AProjectile::SetData(FProjectileDataTableRow* Row)
 
 void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
-	AttachToActor(OtherActor, FAttachmentTransformRules::KeepRelativeTransform);
+	AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
 
 	if (!EffectDataTableRowHandle.DataTable || EffectDataTableRowHandle.RowName.IsNone())
 	{
