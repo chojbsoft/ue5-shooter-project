@@ -2,6 +2,7 @@
 
 
 #include "Actors/Enemy.h"
+#include "Actors/Projectile.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -28,6 +29,21 @@ void AEnemy::BeginPlay()
 	
 }
 
+void AEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	TArray<AActor*> Array;
+	GetAttachedActors(Array);
+	for (AActor* Actor : Array)
+	{
+		if (Cast<AProjectile>(Actor))
+		{
+			Actor->Destroy();
+		}
+	}
+}
+
 // Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
@@ -47,6 +63,11 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	UE_LOG(LogTemp, Warning, TEXT("Damage: %f"), DamageAmount);
+	--HP;
+	if (HP == 0)
+	{
+		Destroy();
+	}
 
 	return Damage;
 }
