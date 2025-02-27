@@ -51,7 +51,7 @@ void AProjectile::SetData(FProjectileDataTableRow* Row)
 		}
 		else
 		{
-			for (uint32 i=0; UMaterial* It : Row->Materials)
+			for (uint32 i = 0; UMaterial * It : Row->Materials)
 			{
 				StaticMeshComponent->SetMaterial(i++, It);
 			}
@@ -80,15 +80,27 @@ void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVec
 	Effect->SetData(Row);
 	Effect->FinishSpawning(Transform);
 
-	// Attempt to cast OtherActor to an Enemy pointer.
-	AEnemy* Enemy = Cast<AEnemy>(OtherActor);
-	if (Enemy)
+	// Apply damage
+	if (FMath::IsNearlyZero(ProjectileDataTableRow->DamageRadius))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
-		FString String = FString::Printf(TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *String);
+		// Attempt to cast OtherActor to an Enemy pointer.
+		AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+		if (IsValid(Enemy))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
+			FString String = FString::Printf(TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *String);
 
-		UGameplayStatics::ApplyDamage(Enemy, (float)ProjectileDataTableRow->Damage, GetInstigatorController(), GetInstigator(), nullptr);
+			UGameplayStatics::ApplyDamage(Enemy, (float)ProjectileDataTableRow->Damage
+				, GetInstigatorController(), GetInstigator(), nullptr);
+		}
+	}
+	else
+	{
+		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, ProjectileDataTableRow->DamageRadius, 32, FColor::Red, false, 2.0f);
+		TArray<AActor*> IgnoreActors;
+		UGameplayStatics::ApplyRadialDamage(this, ProjectileDataTableRow->Damage, Hit.ImpactPoint, ProjectileDataTableRow->DamageRadius
+			, nullptr, IgnoreActors, GetInstigator(), GetInstigatorController(), true, ECC_GameTraceChannel3);
 	}
 }
 

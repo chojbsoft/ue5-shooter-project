@@ -43,6 +43,9 @@ struct FProjectileDataTableRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere)
 	float Damage;
+
+	UPROPERTY(EditAnywhere)
+	float DamageRadius;
 };
 
 
