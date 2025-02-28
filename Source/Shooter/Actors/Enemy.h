@@ -4,6 +4,7 @@
 #include <Components/SkeletalMeshComponent.h>
 #include <Components/BoxComponent.h>
 #include "Components/DefenceFloatingPawnMovement.h"
+#include "Components/StatComponent.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -20,6 +21,7 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
+	virtual void OnConstruction(const FTransform& Transform);
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -45,5 +47,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UDefenceFloatingPawnMovement* DefenceFloatingPawnMovement;
 
-	int32 HP = 2;
+	UPROPERTY(EditAnywhere)
+	UStatComponent* StatComponent;
+
+protected:
+	// Stat DT
+	UPROPERTY(EditAnywhere)
+	FDataTableRowHandle StatDataTableRowHandle;
+	
 };

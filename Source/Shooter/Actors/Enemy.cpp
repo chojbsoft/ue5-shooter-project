@@ -7,12 +7,13 @@
 // Sets default values
 AEnemy::AEnemy()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	DefenceFloatingPawnMovement = CreateDefaultSubobject<UDefenceFloatingPawnMovement>(TEXT("DefenceFloatingPawnMovement"));
+	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("StatComponent"));
 
 	SetRootComponent(BoxComponent);
 	SkeletalMeshComponent->SetupAttachment(GetRootComponent());
@@ -22,11 +23,22 @@ AEnemy::AEnemy()
 
 }
 
+void AEnemy::OnConstruction(const FTransform& Transform)
+{
+	if (StatDataTableRowHandle.DataTable && StatDataTableRowHandle.RowName != NAME_None)
+	{
+		FStatDataTableRow* StatDataTableRow = StatDataTableRowHandle.GetRow<FStatDataTableRow>(StatDataTableRowHandle.RowName.ToString());
+		StatComponent = NewObject<UStatComponent>(this, StatDataTableRow->StatComponentClass);
+		StatComponent->RegisterComponent();
+		StatComponent->SetData(StatDataTableRow);
+	}
+}
+
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void AEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -61,14 +73,8 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
+	Damage = StatComponent->ProcessDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	UE_LOG(LogTemp, Warning, TEXT("Damage: %f"), DamageAmount);
-	--HP;
-	if (HP == 0)
-	{
-		Destroy();
-	}
-
 	return Damage;
 }
 
