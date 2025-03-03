@@ -56,11 +56,11 @@ void ASkeletalTank::OnConstruction(const FTransform& Transform)
 	if (DataTableRowHandle.IsNull()) { return; }
 	ProjectileTableRow = DataTableRowHandle.GetRow<FProjectileDataTableRow>(TEXT("TankProjectile"));
 
-	UMaterialInterface* Material = SkeletalMeshComponent->GetMaterial(1);
-	if (Material)
+	int i = 0;
+	for (auto Material : SkeletalMeshComponent->GetMaterials())
 	{
 		MID = UMaterialInstanceDynamic::Create(Material, SkeletalMeshComponent);
-		SkeletalMeshComponent->SetMaterial(1, MID);
+		SkeletalMeshComponent->SetMaterial(i++, MID);
 	}
 }
 

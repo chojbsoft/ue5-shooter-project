@@ -21,11 +21,6 @@ UStatComponent::UStatComponent()
 float UStatComponent::ProcessDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HP -= DamageAmount;
-	if (HP <= 0.f)
-	{
-		AActor* Actor = GetOwner();
-		Actor->Destroy();
-	}
 	return HP;
 }
 

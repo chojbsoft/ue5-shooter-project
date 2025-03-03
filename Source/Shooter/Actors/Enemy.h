@@ -5,6 +5,7 @@
 #include <Components/BoxComponent.h>
 #include "Components/DefenceFloatingPawnMovement.h"
 #include "Components/StatComponent.h"
+#include <Components/TimelineComponent.h>
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -35,6 +36,13 @@ public:
 public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 
+protected:
+	UFUNCTION()
+	void OnTimelineFloat(float Value);
+
+	UFUNCTION()
+	void OnTimelineFinished();
+
 
 protected:
 	// Components
@@ -54,5 +62,13 @@ protected:
 	// Stat DT
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle StatDataTableRowHandle;
+
+protected:
+	// Destroy
+	UPROPERTY(EditAnywhere)
+	UTimelineComponent* TimelineComponent;
+
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* CurveFloat;
 	
 };

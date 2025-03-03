@@ -21,6 +21,8 @@ AEnemy::AEnemy()
 	SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	BoxComponent->SetCollisionProfileName(TEXT("Enemy"));
 
+	// Timeline
+	TimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComponent"));
 }
 
 void AEnemy::OnConstruction(const FTransform& Transform)
@@ -32,6 +34,21 @@ void AEnemy::OnConstruction(const FTransform& Transform)
 		StatComponent->RegisterComponent();
 		StatComponent->SetData(StatDataTableRow);
 	}
+
+	for (int32 i = 0; i < SkeletalMeshComponent->GetNumMaterials(); ++i)
+	{
+		SkeletalMeshComponent->CreateDynamicMaterialInstance(i);
+	}
+
+	// 타임라인에 커브, 델리게이트 연결
+	FOnTimelineFloat Delegate;
+	Delegate.BindUFunction(this, TEXT("OnTimelineFloat"));
+	TimelineComponent->AddInterpFloat(CurveFloat, Delegate); 
+	
+	// 종료 델리게이트 연결
+	FOnTimelineEvent TimelineFinishedCallback;
+	TimelineFinishedCallback.BindUFunction(this, FName("OnTimelineFinished"));
+	TimelineComponent->SetTimelineFinishedFunc(TimelineFinishedCallback);
 }
 
 // Called when the game starts or when spawned
@@ -74,7 +91,28 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 {
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	Damage = StatComponent->ProcessDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	UE_LOG(LogTemp, Warning, TEXT("Damage: %f"), DamageAmount);
+	if (StatComponent->GetHP() <= 0.0f)
+	{
+		SetActorEnableCollision(false);
+		TimelineComponent->PlayFromStart();
+	}
 	return Damage;
+}
+
+void AEnemy::OnTimelineFloat(float Value)
+{
+	for (auto Material : SkeletalMeshComponent->GetMaterials())
+	{
+		UMaterialInstanceDynamic* MID = Cast<UMaterialInstanceDynamic>(Material);
+		if (MID)
+		{
+			MID->SetScalarParameterValue(TEXT("PaperBurnOffset"), Value);
+		}
+	}
+}
+
+void AEnemy::OnTimelineFinished()
+{
+	Destroy();
 }
 

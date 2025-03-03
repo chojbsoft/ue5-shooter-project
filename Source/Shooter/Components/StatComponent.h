@@ -43,6 +43,9 @@ public:
 public:
 	virtual void SetData(FStatDataTableRow* StatDataTableRow);
 
+public:
+	float GetHP() { return HP; }
+
 protected:
 	UPROPERTY(EditAnywhere)
 	float HP = 10;
