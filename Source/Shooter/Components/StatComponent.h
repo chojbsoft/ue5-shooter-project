@@ -15,6 +15,9 @@ struct SHOOTER_API FStatDataTableRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere)
 	float HP = 10;
+
+	UPROPERTY(EditAnywhere)
+	float Speed = 1000.0f;
 	
 	TSubclassOf<class UStatComponent> StatComponentClass;
 };
@@ -45,9 +48,12 @@ public:
 
 public:
 	float GetHP() { return HP; }
+	float GetSpeed() { return Speed; }
 
 protected:
 	UPROPERTY(EditAnywhere)
 	float HP = 10;
+	UPROPERTY(EditAnywhere)
+	float Speed = 10;
 		
 };

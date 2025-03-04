@@ -27,6 +27,7 @@ float UStatComponent::ProcessDamage(float DamageAmount, FDamageEvent const& Dama
 void UStatComponent::SetData(FStatDataTableRow* StatDataTableRow)
 {
 	HP = StatDataTableRow->HP;
+	Speed = StatDataTableRow->Speed;
 }
 
 
