@@ -53,7 +53,8 @@ void AProjectile::SetData(FProjectileDataTableRow* Row)
 		{
 			for (uint32 i = 0; UMaterial * It : Row->Materials)
 			{
-				StaticMeshComponent->SetMaterial(i++, It);
+				//StaticMeshComponent->SetMaterial(i++, It);
+				StaticMeshComponent->CreateDynamicMaterialInstance(i++, It);
 			}
 		}
 	}

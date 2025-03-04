@@ -24,6 +24,7 @@ ASkeletalTank::ASkeletalTank()
 	ZoomCamera->SetupAttachment(SkeletalMeshComponent, TEXT("ZoomCameraSocket"));
 
 	BoxComponent->SetCollisionProfileName(TEXT("Player"));
+	BoxComponent->SetCanEverAffectNavigation(false);
 	SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	SpringArmComponent->bUsePawnControlRotation = true;

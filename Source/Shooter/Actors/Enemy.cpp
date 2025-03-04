@@ -20,9 +20,12 @@ AEnemy::AEnemy()
 
 	SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	BoxComponent->SetCollisionProfileName(TEXT("Enemy"));
+	BoxComponent->SetCanEverAffectNavigation(false);
 
 	// Timeline
 	TimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComponent"));
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AEnemy::OnConstruction(const FTransform& Transform)
@@ -33,6 +36,8 @@ void AEnemy::OnConstruction(const FTransform& Transform)
 		StatComponent = NewObject<UStatComponent>(this, StatDataTableRow->StatComponentClass);
 		StatComponent->RegisterComponent();
 		StatComponent->SetData(StatDataTableRow);
+
+		DefenceFloatingPawnMovement->MaxSpeed = StatComponent->GetSpeed();
 	}
 
 	for (int32 i = 0; i < SkeletalMeshComponent->GetNumMaterials(); ++i)
@@ -43,8 +48,8 @@ void AEnemy::OnConstruction(const FTransform& Transform)
 	// 타임라인에 커브, 델리게이트 연결
 	FOnTimelineFloat Delegate;
 	Delegate.BindUFunction(this, TEXT("OnTimelineFloat"));
-	TimelineComponent->AddInterpFloat(CurveFloat, Delegate); 
-	
+	TimelineComponent->AddInterpFloat(CurveFloat, Delegate);
+
 	// 종료 델리게이트 연결
 	FOnTimelineEvent TimelineFinishedCallback;
 	TimelineFinishedCallback.BindUFunction(this, FName("OnTimelineFinished"));
@@ -93,6 +98,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 	Damage = StatComponent->ProcessDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (StatComponent->GetHP() <= 0.0f)
 	{
+		// Stop movement
+		GetController()->StopMovement();
+
 		SetActorEnableCollision(false);
 		TimelineComponent->PlayFromStart();
 	}
@@ -107,6 +115,31 @@ void AEnemy::OnTimelineFloat(float Value)
 		if (MID)
 		{
 			MID->SetScalarParameterValue(TEXT("PaperBurnOffset"), Value);
+		}
+	}
+
+	// Projectile PaperBurn
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+	for (AActor* Actor : AttachedActors)
+	{
+		AProjectile* Projectile = Cast<AProjectile>(Actor);
+		if (Projectile)
+		{
+			TArray<UStaticMeshComponent*> Components;
+			Projectile->GetComponents(UStaticMeshComponent::StaticClass(), Components);
+			for (UStaticMeshComponent* StaticMeshComponent : Components)
+			{
+				for (int32 i = 0; i < StaticMeshComponent->GetNumMaterials(); ++i)
+				{
+
+					UMaterialInstanceDynamic* MID = Cast<UMaterialInstanceDynamic>(StaticMeshComponent->GetMaterial(i));
+					if (MID)
+					{
+						MID->SetScalarParameterValue(TEXT("PaperBurnOffset"), Value);
+					}
+				}
+			}
 		}
 	}
 }
