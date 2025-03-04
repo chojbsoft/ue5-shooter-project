@@ -6,6 +6,7 @@
 #include "Components/DefenceFloatingPawnMovement.h"
 #include "Components/StatComponent.h"
 #include <Components/TimelineComponent.h>
+#include "FollowPointsAIController.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -71,4 +72,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* CurveFloat;
 	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AAIController> MyAIControllerClass;
 };

@@ -30,6 +30,8 @@ AEnemy::AEnemy()
 
 void AEnemy::OnConstruction(const FTransform& Transform)
 {
+	AIControllerClass = MyAIControllerClass;
+
 	if (StatDataTableRowHandle.DataTable && StatDataTableRowHandle.RowName != NAME_None)
 	{
 		FStatDataTableRow* StatDataTableRow = StatDataTableRowHandle.GetRow<FStatDataTableRow>(StatDataTableRowHandle.RowName.ToString());
