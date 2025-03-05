@@ -30,14 +30,14 @@ ASkeletalTank::ASkeletalTank()
 	SpringArmComponent->bUsePawnControlRotation = true;
 	SpringArmComponent->bInheritRoll = false;
 
-	const TSet<UActorComponent*>& Components = GetComponents();
-	for (UActorComponent* Component : Components)
-	{
-		if (Component != SkeletalMeshComponent)
-		{
-			SkeletalMeshComponent->AddTickPrerequisiteComponent(Component);
-		}
-	}
+	//const TSet<UActorComponent*>& Components = GetComponents();
+	//for (UActorComponent* Component : Components)
+	//{
+	//	if (Component != SkeletalMeshComponent)
+	//	{
+	//		SkeletalMeshComponent->AddTickPrerequisiteComponent(Component);
+	//	}
+	//}
 
 
 

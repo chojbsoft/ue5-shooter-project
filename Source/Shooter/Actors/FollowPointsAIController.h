@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Navigation/PathFollowingComponent.h"
+
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "FollowPointsAIController.generated.h"
@@ -16,4 +18,17 @@ class SHOOTER_API AFollowPointsAIController : public AAIController
 	
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void SetPointsAndMove(const TArray<FVector>& InPoints);
+
+public:
+	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+
+protected:
+	void Move();
+
+protected:
+	TArray<FVector> Points;
+	int32 CurrentPointIndex = 0;
 };
