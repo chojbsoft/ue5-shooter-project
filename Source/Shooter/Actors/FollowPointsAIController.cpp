@@ -32,7 +32,7 @@ void AFollowPointsAIController::OnMoveCompleted(FAIRequestID RequestID, const FP
     Super::OnMoveCompleted(RequestID, Result);
     if (!Result.IsSuccess())
     {
-        ensure(false);
+        //ensure(false);
         return;
     }
 

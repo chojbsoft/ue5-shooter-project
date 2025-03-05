@@ -20,8 +20,6 @@ ASplineEnemySpawner::ASplineEnemySpawner()
 void ASplineEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
-	StartWave();
 }
 
 // Called every frame
@@ -31,8 +29,13 @@ void ASplineEnemySpawner::Tick(float DeltaTime)
 
 }
 
-void ASplineEnemySpawner::StartWave()
+void ASplineEnemySpawner::StartWave(UEnemySpawnDataAsset* InEnemySpawnDataAsset)
 {
+	if (InEnemySpawnDataAsset)
+	{
+		EnemySpawnDataAsset = InEnemySpawnDataAsset;
+	}
+
 	if (!EnemySpawnDataAsset)
 	{
 		return;
@@ -62,7 +65,6 @@ void ASplineEnemySpawner::Spawn(FEnemySpawnInfo& InEnemySpawnInfo, const uint32 
 			for (int32 i = 0; i < NumPoints; i++)
 			{
 				FVector PointLocation = SplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
-				FVector NewLocation = FVector(PointLocation.X, PointLocation.Y, Enemy->GetActorLocation().Z);
 				Points.Add(PointLocation);
 			}
 			Cast<AFollowPointsAIController>(Enemy->GetController())->SetPointsAndMove(Points);
@@ -71,7 +73,7 @@ void ASplineEnemySpawner::Spawn(FEnemySpawnInfo& InEnemySpawnInfo, const uint32 
 			// 다 소환했으면 다음 웨이브, 남아있다면 다음 스폰
 			if (InRemainCount == 1)
 			{
-				StartWave();
+				StartWave(nullptr);
 			}
 			else
 			{

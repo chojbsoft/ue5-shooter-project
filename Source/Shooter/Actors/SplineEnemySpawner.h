@@ -24,7 +24,7 @@ struct FEnemySpawnInfo
 	UClass* EnemyClass;
 };
 
-UCLASS()
+UCLASS(BlueprintType)
 class UEnemySpawnDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
@@ -52,12 +52,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UFUNCTION()
-	void StartWave();
+	UFUNCTION(BlueprintCallable)
+	void StartWave(UEnemySpawnDataAsset* InEnemySpawnDataAsset);
 
 protected:
-
-	UFUNCTION()
 	void Spawn(FEnemySpawnInfo& InEnemySpawnInfo, const uint32 InRemainCount);
 
 protected:
