@@ -54,9 +54,11 @@ protected:
 
 protected:
 	void StartWave(const uint32 WaveIndex);
+	bool CanTransitionWave();
 
 	UFUNCTION()
 	void OnWaveFinished();
+	void OnStageFinished();
 
 protected:
 	UPROPERTY(Transient)
