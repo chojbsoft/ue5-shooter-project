@@ -1,15 +1,15 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "TankInterface.generated.h"
+#include "ShooterInterface.generated.h"
 
 UINTERFACE()
-class UTankInterface : public UInterface
+class UShooterInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
 
-class ITankInterface
+class IShooterInterface
 {
 	GENERATED_BODY()
 public:

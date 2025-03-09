@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Actors/DefencePlayerController.h"
-#include "Interface/TankInterface.h"
+#include "Interface/ShooterInterface.h"
 
 ADefencePlayerController::ADefencePlayerController()
 {
@@ -59,27 +59,27 @@ void ADefencePlayerController::OnLook(const FInputActionValue& InputActionValue)
 
 void ADefencePlayerController::OnZoomIn(const FInputActionValue& InputActionValue)
 {
-	ITankInterface* Tank = Cast<ITankInterface>(GetPawn());
-	if (Tank)
+	IShooterInterface* Shooter = Cast<IShooterInterface>(GetPawn());
+	if (Shooter)
 	{
-		Tank->Zoom(true);
+		Shooter->Zoom(true);
 	}
 }
 
 void ADefencePlayerController::OnZoomOut(const FInputActionValue& InputActionValue)
 {
-	ITankInterface* Tank = Cast<ITankInterface>(GetPawn());
-	if (Tank)
+	IShooterInterface* Shooter = Cast<IShooterInterface>(GetPawn());
+	if (Shooter)
 	{
-		Tank->Zoom(false);
+		Shooter->Zoom(false);
 	}
 }
 
 void ADefencePlayerController::OnFire(const FInputActionValue& InputActionValue)
 {
-	ITankInterface* Tank = Cast<ITankInterface>(GetPawn());
-	if (Tank)
+	IShooterInterface* Shooter = Cast<IShooterInterface>(GetPawn());
+	if (Shooter)
 	{
-		Tank->Fire();
+		Shooter->Fire();
 	}
 }

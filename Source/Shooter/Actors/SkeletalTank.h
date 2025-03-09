@@ -9,14 +9,14 @@
 #include <Camera/CameraComponent.h>
 #include "Components/DefenceFloatingPawnMovement.h"
 #include "Projectile.h"
-#include "Interface/TankInterface.h"
+#include "Interface/ShooterInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "SkeletalTank.generated.h"
 
 UCLASS()
-class SHOOTER_API ASkeletalTank : public APawn, public ITankInterface
+class SHOOTER_API ASkeletalTank : public APawn, public IShooterInterface
 {
 	GENERATED_BODY()
 
