@@ -18,5 +18,10 @@ void UDefenceAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
         FVector Velocity = OwningPawn->GetVelocity();
         Speed = Velocity.Size2D();
         bShouldMove = Speed >= 5.0f;
+
+        const FRotator& Rotator = OwningPawn->GetActorRotation();
+        Direction = CalculateDirection(Velocity, Rotator);
+
+        PitchRotator = FRotator(0.0, 0.0, OwningPawn->GetBaseAimRotation().Pitch / -5.0);
     }
 }

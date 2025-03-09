@@ -25,6 +25,10 @@ protected:
     float Speed;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation")
     bool bShouldMove;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation")
+    float Direction;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Animation")
+    FRotator PitchRotator;
 
 private:
     APawn* OwningPawn;
