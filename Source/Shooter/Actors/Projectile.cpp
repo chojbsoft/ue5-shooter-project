@@ -62,8 +62,6 @@ void AProjectile::SetData(FProjectileDataTableRow* Row)
 
 void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
-	AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
-
 	if (!EffectDataTableRowHandle.DataTable || EffectDataTableRowHandle.RowName.IsNone())
 	{
 		return;
@@ -82,26 +80,25 @@ void AProjectile::OnActorHitFunction(AActor* SelfActor, AActor* OtherActor, FVec
 	Effect->FinishSpawning(Transform);
 
 	// Apply damage
-	if (FMath::IsNearlyZero(ProjectileDataTableRow->DamageRadius))
+	//if (FMath::IsNearlyZero(ProjectileDataTableRow->DamageRadius))
 	{
-		// Attempt to cast OtherActor to an Enemy pointer.
 		AEnemy* Enemy = Cast<AEnemy>(OtherActor);
 		if (IsValid(Enemy))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
-			FString String = FString::Printf(TEXT("EnemyHit: %s"), *Enemy->GetFName().ToString());
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *String);
+			AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform);
+
+			Collider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 			UGameplayStatics::ApplyDamage(Enemy, (float)ProjectileDataTableRow->Damage
 				, GetInstigatorController(), GetInstigator(), nullptr);
 		}
 	}
-	else
-	{
-		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, ProjectileDataTableRow->DamageRadius, 32, FColor::Red, false, 2.0f);
-		TArray<AActor*> IgnoreActors;
-		UGameplayStatics::ApplyRadialDamage(this, ProjectileDataTableRow->Damage, Hit.ImpactPoint, ProjectileDataTableRow->DamageRadius
-			, nullptr, IgnoreActors, GetInstigator(), GetInstigatorController(), true, ECC_GameTraceChannel3);
-	}
+	//else
+	//{
+	//	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, ProjectileDataTableRow->DamageRadius, 32, FColor::Red, false, 2.0f);
+	//	TArray<AActor*> IgnoreActors;
+	//	UGameplayStatics::ApplyRadialDamage(this, ProjectileDataTableRow->Damage, Hit.ImpactPoint, ProjectileDataTableRow->DamageRadius
+	//		, nullptr, IgnoreActors, GetInstigator(), GetInstigatorController(), true, ECC_GameTraceChannel3);
+	//}
 }
 

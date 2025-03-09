@@ -15,15 +15,6 @@ struct FProjectileDataTableRow : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	UStaticMesh* StaticMesh;
-
-	UPROPERTY(EditAnywhere)
-	FTransform StaticMeshTransform;
-
-	UPROPERTY(EditAnywhere)
-	float ColliderRadius = 32.f;
-
-	UPROPERTY(EditAnywhere)
 	float ProjectileSpeed = 2000.f;
 
 	UPROPERTY(EditAnywhere)
