@@ -47,6 +47,7 @@ class SHOOTER_API ADefenceGameMode : public AGameModeBase
 public:
 	ADefenceGameMode();
 	virtual void BeginPlay() override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 private:
 	void StartStage();
@@ -70,4 +71,6 @@ protected:
 
 	bool bWaveFinished = false;
 	uint32 CurrentWaveIndex = 0;
+
+	bool bStageStarted = false;
 };

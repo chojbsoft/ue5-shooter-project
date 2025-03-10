@@ -16,7 +16,22 @@ ADefenceGameMode::ADefenceGameMode()
 void ADefenceGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	StartStage();
+}
+
+void ADefenceGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	// 현재 서버에 접속 중인 PlayerController 수를 확인
+	AGameStateBase* GS = GameState;
+	int32 CurrentPlayerCount = GS->PlayerArray.Num();
+
+	// 2명 이상 접속 & 아직 스테이지를 시작하지 않았다면, StartStage 시작
+	if (CurrentPlayerCount >= 2 && !bStageStarted)
+	{
+		bStageStarted = true;
+		StartStage();
+	}
 }
 
 void ADefenceGameMode::StartStage()
