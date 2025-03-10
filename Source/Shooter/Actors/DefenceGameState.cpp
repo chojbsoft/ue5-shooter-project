@@ -8,6 +8,7 @@
 ADefenceGameState::ADefenceGameState()
 {
     CurrentWaveIndex = 0;
+    bReplicates = true;
 }
 
 void ADefenceGameState::SetCurrentWaveIndex(int32 NewIndex)
