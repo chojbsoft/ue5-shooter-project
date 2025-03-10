@@ -29,12 +29,14 @@ void ADefencePlayerController::SetupInputComponent()
 void ADefencePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	if (IsLocalController())
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-
-	// IMC 여러개를 추가 할 수 있는데, 여기서 우선순위 정할 수 있음
-	// 입력 소진을 활성화하면, 우선 순위가 높은 입력만 처리됨
-	Subsystem->AddMappingContext(InputMappingContext, 0);
+		// IMC 여러개를 추가 할 수 있는데, 여기서 우선순위 정할 수 있음
+		// 입력 소진을 활성화하면, 우선 순위가 높은 입력만 처리됨
+		Subsystem->AddMappingContext(InputMappingContext, 0);
+	}
 }
 
 void ADefencePlayerController::OnMove(const FInputActionValue& InputActionValue)
