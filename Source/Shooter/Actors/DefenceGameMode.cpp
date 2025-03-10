@@ -6,6 +6,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "Actors/Enemy.h"
 #include "Actors/SplineEnemySpawner.h"
+#include "DefenceGameState.h"
 
 ADefenceGameMode::ADefenceGameMode()
 {
@@ -31,6 +32,12 @@ void ADefenceGameMode::StartStage()
 		ensure(false);
 	}
 
+	// GameState에 웨이브 인덱스 반영
+	if (ADefenceGameState* DGS = GetGameState<ADefenceGameState>())
+	{
+		DGS->SetTotalWaveIndex(StageDataAsset->Waves.Num());
+	}
+
 	LevelSequenceActor = GetWorld()->SpawnActor<ALevelSequenceActor>();
 	StartWave(0);
 }
@@ -52,12 +59,20 @@ void ADefenceGameMode::StartWave(const uint32 WaveIndex)
 		LevelSequenceActor->GetSequencePlayer()->OnFinished.AddDynamic(this, &ADefenceGameMode::OnWaveFinished);
 	}
 	LevelSequenceActor->GetSequencePlayer()->Play();
+
+
+	// GameState에 웨이브 인덱스 반영
+	if (ADefenceGameState* DGS = GetGameState<ADefenceGameState>())
+	{
+		DGS->SetCurrentWaveIndex(CurrentWaveIndex);
+	}
 }
 
 void ADefenceGameMode::OnStageFinished()
 {
 	LevelSequenceActor->Destroy();
 	StageDataAsset = nullptr;
+	SetActorTickEnabled(false);
 }
 
 void ADefenceGameMode::OnWaveFinished()

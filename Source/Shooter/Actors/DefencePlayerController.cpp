@@ -83,3 +83,40 @@ void ADefencePlayerController::OnFire(const FInputActionValue& InputActionValue)
 		Shooter->Fire();
 	}
 }
+
+void ADefencePlayerController::UpdateWaveUI(int32 CurrentWave, int32 TotalWaves)
+{
+	if (!WaveInfoWidgetClass)
+	{
+		return;
+	}
+
+	// 아직 위젯 인스턴스를 만들지 않았다면 생성
+	if (!WaveInfoWidget)
+	{
+		WaveInfoWidget = CreateWidget<UUserWidget>(this, WaveInfoWidgetClass);
+		if (WaveInfoWidget)
+		{
+			WaveInfoWidget->AddToViewport();
+		}
+	}
+
+	if (WaveInfoWidget)
+	{
+		static const FName FuncName("UpdateWaveInfo");
+		if (UFunction* Func = WaveInfoWidget->FindFunction(FuncName))
+		{
+			struct FWaveInfoParams
+			{
+				int32 InCurrentWave;
+				int32 InTotalWaves;
+			};
+
+			FWaveInfoParams Params;
+			Params.InCurrentWave = CurrentWave;
+			Params.InTotalWaves = TotalWaves;
+
+			WaveInfoWidget->ProcessEvent(Func, &Params);
+		}
+	}
+}

@@ -13,7 +13,7 @@
 #include "DefencePlayerController.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SHOOTER_API ADefencePlayerController : public APlayerController
@@ -35,6 +35,16 @@ protected:
 	void OnZoomIn(const FInputActionValue& InputActionValue);
 	void OnZoomOut(const FInputActionValue& InputActionValue);
 	void OnFire(const FInputActionValue& InputActionValue);
+
+public:
+	void UpdateWaveUI(int32 CurrentWave, int32 TotalWaves);
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> WaveInfoWidgetClass;
+
+	UPROPERTY()
+	UUserWidget* WaveInfoWidget;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
